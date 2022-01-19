@@ -1,1 +1,2 @@
-select * from default.bronze_customers
+
+select * from {{ source('bronze', 'customers') }}
