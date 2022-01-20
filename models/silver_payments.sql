@@ -1,12 +1,17 @@
+{{ config(
+  materialized = 'incremental',
+  file_format  = 'delta',
+  schema       = 'silver'
+) }}
+
+
 with 
 
--- import CTE
 payment_source as (
 
     select * from {{ source('bronze', 'payments') }}
 ),
 
--- transformation CTE
 payments as (
 
     select
@@ -19,5 +24,4 @@ payments as (
     from payment_source
 ) 
 
--- final
 select * from payments 
