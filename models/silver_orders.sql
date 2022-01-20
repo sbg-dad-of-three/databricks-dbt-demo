@@ -1,5 +1,5 @@
 {{ config(
-  materialized = 'incremental',
+  materialized = 'table',
   file_format  = 'delta',
   schema       = 'silver'
 ) }}
@@ -20,7 +20,7 @@ orders as (
         id as order_id,
         user_id as customer_id,
         status as order_status,
-        order_date,
+        order_date as order_placed_at,
         
         case 
             when status not in ('returned','return_pending') 
