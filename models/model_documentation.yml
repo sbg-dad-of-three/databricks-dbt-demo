@@ -1,0 +1,81 @@
+version: 2
+
+models:
+  - name: silver_customers
+    description: Enriched customer data.
+    columns: 
+      - name: customer_id
+        description: The primary key for customers.
+        tests:
+          - unique
+          - not_null
+
+      - name: customer_last_name
+        description: Customer last initial.
+
+      - name: customer_first_name
+        description: Customer first name.
+
+      - name: customer_full_name
+        description: Concatenation of a customer's first name and last initial.
+
+  - name: silver_orders
+    description: Enriched order data.
+    columns: 
+      - name: order_id
+        description: Primary key for orders.
+        tests:
+          - unique
+          - not_null
+
+      - name: customer_id
+        description: Foreign key to silver_customers.customer_id.
+        tests:
+          - relationships:
+              to: ref('silver_customers')
+              field: customer_id
+
+      - name: order_status
+        description: "{{ doc('order_status') }}"
+        tests:
+          - accepted_values:
+              values:
+                - completed
+                - shipped
+                - returned
+                - placed
+                - return_pending
+                
+      - name: order_placed_at
+        description: Date that the order was placed.
+
+      - name: valid_order_date
+        description: Date of order when order_status is not returned or return pending.
+
+      - name: user_order_seq
+        description: Sequence of orders for a given customer ordered by ascending order date.
+
+  - name: silver_payments
+    description: Enriched payment data.
+    columns: 
+      - name: payment_id
+        description: Primary key for payments.
+
+      - name: order_id
+        description: Foreign key to silver_orders.order_id.
+        tests:
+          - relationships:
+              to: ref('silver_orders')
+              field: order_id
+      
+      - name: payment_created_at
+        description: Date of valid payment.
+
+      - name: payment_status
+        description: Status of payment.
+
+      - name: payment_amounts
+        description: Amount of payments in dollars.
+
+
+
