@@ -19,7 +19,7 @@ paid_orders as (
 
 ),
 
-final as (
+customer_orders as (
 
   select
     paid_orders.order_id,
@@ -62,4 +62,4 @@ final as (
     left join customers on paid_orders.customer_id = customers.customer_id
 )
 
-select * from final
+select * from customer_orders
